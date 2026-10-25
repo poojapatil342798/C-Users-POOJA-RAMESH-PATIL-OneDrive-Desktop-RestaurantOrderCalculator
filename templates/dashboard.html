@@ -1,0 +1,179 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Restaurant Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>📊 Restaurant Dashboard</h1>
+    <p class="subtitle">Overview of orders and sales</p>
+
+    <!-- Dashboard Summary Cards -->
+    <div class="dashboard-cards">
+
+        <div class="dashboard-card">
+            <h2>📋 Total Orders</h2>
+            <p class="dashboard-number">{{ total_orders }}</p>
+        </div>
+
+        <div class="dashboard-card">
+            <h2>💰 Total Sales</h2>
+            <p class="dashboard-number">
+                ₹{{ "%.2f"|format(total_sales) }}
+            </p>
+        </div>
+
+        <div class="dashboard-card">
+            <h2>🧾 Average Bill</h2>
+            <p class="dashboard-number">
+                ₹{{ "%.2f"|format(average_bill) }}
+            </p>
+        </div>
+
+    </div>
+
+    <!-- Recent Order Sales Chart -->
+    <h2>📈 Recent Order Sales Chart</h2>
+
+    <div class="chart-container">
+
+        {% if chart_values %}
+
+            {% set max_sales = [chart_values|max, 1]|max %}
+
+            {% for i in range(chart_labels|length) %}
+
+            <div style="
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                margin: 18px 0;
+                text-align: left;
+            ">
+
+                <!-- Order label -->
+                <span style="
+                    width: 65px;
+                    flex-shrink: 0;
+                    font-size: 12px;
+                    color: #555;
+                ">
+                    {{ chart_labels[i] }}
+                </span>
+
+                <!-- Bar background -->
+                <div style="
+                    flex: 1;
+                    min-width: 0;
+                    background: #f3d4bc;
+                    border-radius: 6px;
+                    overflow: hidden;
+                ">
+
+                    <!-- Sales bar -->
+                    <div style="
+                        width: {{ (chart_values[i] / max_sales * 100)|round(2) }}%;
+                        min-height: 30px;
+                        background: #d95d19;
+                        border-radius: 6px;
+                        color: white;
+                        font-size: 12px;
+                        font-weight: bold;
+                        text-align: right;
+                        padding: 5px 8px;
+                        box-sizing: border-box;
+                        white-space: nowrap;
+                    ">
+                        ₹{{ "%.0f"|format(chart_values[i]) }}
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+            <p style="font-size: 13px; color: #777;">
+                Order Number (last 6 characters) — Sales Amount in ₹
+            </p>
+
+        {% else %}
+
+            <p>No sales data available yet.</p>
+
+        {% endif %}
+
+    </div>
+
+    <!-- Recent Orders Table -->
+    <h2>Recent Orders</h2>
+
+    {% if recent_orders %}
+
+    <table>
+        <thead>
+            <tr>
+                <th>Order Number</th>
+                <th>Date</th>
+                <th>Customer</th>
+                <th>Total Bill</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for order in recent_orders %}
+
+            <tr>
+                <td>
+                    <a href="{{ url_for('view_order', order_number=order[0]) }}">
+                        {{ order[0] }}
+                    </a>
+                </td>
+
+                <td>{{ order[1] }}</td>
+
+                <td>{{ order[2] }}</td>
+
+                <td>
+                    ₹{{ "%.2f"|format(order[3]) }}
+                </td>
+            </tr>
+
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% else %}
+
+        <p>No orders have been saved yet.</p>
+
+    {% endif %}
+
+    <!-- Navigation Links -->
+    <div class="no-print">
+
+        <a class="button-link" href="{{ url_for('home') }}">
+            ← Back to Menu
+        </a>
+
+        <a class="button-link" href="{{ url_for('order_history') }}">
+            📋 View All Orders
+        </a>
+
+    </div>
+
+    <p class="footer">Restaurant Sales Dashboard ❤️</p>
+
+</div>
+
+</body>
+</html>

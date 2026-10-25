@@ -1,0 +1,215 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Menu</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        /* Menu: exactly 2 food cards per row */
+        .container .food-menu {
+            display: grid !important;
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            gap: 20px !important;
+            width: 100%;
+            align-items: stretch;
+        }
+
+        /* Individual food card */
+        .container .food-menu .food-card {
+            display: block !important;
+            width: 100% !important;
+            min-width: 0 !important;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-sizing: border-box;
+            overflow-wrap: break-word;
+        }
+
+        /* Small, coin-sized food images */
+        .container .food-menu .food-card img {
+            display: block !important;
+            width: 40px !important;
+            height: 40px !important;
+            min-width: 40px !important;
+            max-width: 40px !important;
+            object-fit: contain !important;
+            margin: 0 auto 8px !important;
+            border-radius: 5px;
+        }
+
+        /* Food names */
+        .container .food-menu .food-card h3 {
+            font-size: 20px;
+            margin: 10px 0;
+        }
+
+        /* Food prices */
+        .container .food-menu .food-price {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+
+        /* Quantity labels */
+        .container .food-menu .food-card label {
+            font-size: 16px;
+        }
+
+        /* Quantity inputs */
+        .container .food-menu .food-card input {
+            width: 80px;
+            max-width: 100%;
+            font-size: 16px;
+            padding: 6px;
+            box-sizing: border-box;
+        }
+
+        /* Keep 2 items per row on mobile */
+        @media (max-width: 600px) {
+            .container .food-menu {
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                gap: 10px !important;
+            }
+
+            .container .food-menu .food-card {
+                padding: 10px;
+            }
+
+            .container .food-menu .food-card h3 {
+                font-size: 17px;
+            }
+
+            .container .food-menu .food-price {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🍽️ Welcome to Our Restaurant</h1>
+    <p class="subtitle">Fresh food, happy moments!</p>
+
+    <h2>👤 Customer Details</h2>
+
+    <form action="{{ url_for('calculate') }}" method="POST">
+
+        <p>
+            <label for="customer_name">Customer Name:</label><br>
+            <input type="text"
+                   id="customer_name"
+                   name="customer_name"
+                   placeholder="Enter your name"
+                   required>
+        </p>
+
+        <p>
+            <label for="phone">Phone Number:</label><br>
+            <input type="tel"
+                   id="phone"
+                   name="phone"
+                   placeholder="Enter 10-digit phone number"
+                   pattern="[0-9]{10}"
+                   minlength="10"
+                   maxlength="10"
+                   inputmode="numeric"
+                   required>
+        </p>
+
+        <h2>🍴 Our Menu</h2>
+
+        <div class="food-menu">
+
+            <!-- Veg Burger -->
+            <div class="food-card">
+                <img src="{{ url_for('static', filename='images/burger.jpg') }}"
+                     alt="Veg Burger">
+                <h3>🍔 Veg Burger</h3>
+                <p class="food-price">₹80</p>
+                <label for="burger">Quantity:</label>
+                <input type="number" id="burger" name="burger"
+                       min="0" step="1" value="0" required>
+            </div>
+
+            <!-- Pizza -->
+            <div class="food-card">
+                <img src="{{ url_for('static', filename='images/pizza.jpg') }}"
+                     alt="Pizza">
+                <h3>🍕 Pizza</h3>
+                <p class="food-price">₹150</p>
+                <label for="pizza">Quantity:</label>
+                <input type="number" id="pizza" name="pizza"
+                       min="0" step="1" value="0" required>
+            </div>
+
+            <!-- Sandwich -->
+            <div class="food-card">
+                <img src="{{ url_for('static', filename='images/sandwich.jpg') }}"
+                     alt="Sandwich">
+                <h3>🥪 Sandwich</h3>
+                <p class="food-price">₹60</p>
+                <label for="sandwich">Quantity:</label>
+                <input type="number" id="sandwich" name="sandwich"
+                       min="0" step="1" value="0" required>
+            </div>
+
+            <!-- French Fries -->
+            <div class="food-card">
+                <img src="{{ url_for('static', filename='images/fries.jpg') }}"
+                     alt="French Fries">
+                <h3>🍟 French Fries</h3>
+                <p class="food-price">₹70</p>
+                <label for="fries">Quantity:</label>
+                <input type="number" id="fries" name="fries"
+                       min="0" step="1" value="0" required>
+            </div>
+
+            <!-- Fresh Juice -->
+            <div class="food-card">
+                <img src="{{ url_for('static', filename='images/juice.jpg') }}"
+                     alt="Fresh Juice">
+                <h3>🥤 Fresh Juice</h3>
+                <p class="food-price">₹50</p>
+                <label for="juice">Quantity:</label>
+                <input type="number" id="juice" name="juice"
+                       min="0" step="1" value="0" required>
+            </div>
+
+        </div>
+
+        <button type="submit">🧾 Calculate Bill</button>
+
+    </form>
+
+    <div class="navigation">
+
+        <a class="button-link"
+           href="{{ url_for('order_history') }}">
+            📋 View Order History
+        </a>
+
+        <a class="button-link"
+           href="{{ url_for('dashboard') }}">
+            📊 Restaurant Dashboard
+        </a>
+
+    </div>
+
+    <p class="footer">
+        Thank you for visiting our restaurant! ❤️
+    </p>
+
+</div>
+
+</body>
+</html>
+

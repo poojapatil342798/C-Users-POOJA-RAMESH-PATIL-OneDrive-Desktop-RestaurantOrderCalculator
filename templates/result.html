@@ -1,0 +1,75 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Receipt</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <h1>🧾 Your Order Receipt</h1>
+    <p class="subtitle">Thank you for ordering with us!</p>
+
+    <div class="receipt-info">
+        <p><strong>Order Number:</strong> {{ order_number }}</p>
+        <p><strong>Order Date:</strong> {{ order_date }}</p>
+    </div>
+
+    <h2>👤 Customer Details</h2>
+    <p><strong>Name:</strong> {{ customer_name }}</p>
+    <p><strong>Phone:</strong> {{ phone }}</p>
+
+    <h2>🍴 Ordered Items</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Food Item</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in order %}
+            <tr>
+                <td>{{ item.name }}</td>
+                <td>₹{{ "%.2f"|format(item.price) }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>₹{{ "%.2f"|format(item.subtotal) }}</td>
+            </tr>
+            {% endfor %}
+            <tr class="total-row">
+                <th colspan="3">Total Bill</th>
+                <th>₹{{ "%.2f"|format(total) }}</th>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="no-print">
+        <button type="button" onclick="window.print()">
+            🖨️ Print Receipt
+        </button>
+
+        <a class="button-link" href="{{ url_for('home') }}">
+            ← Back to Menu
+        </a>
+
+        <a class="button-link" href="{{ url_for('order_history') }}">
+            📋 Order History
+        </a>
+
+        <a class="button-link" href="{{ url_for('dashboard') }}">
+            📊 Dashboard
+        </a>
+    </div>
+
+    <p class="footer">Thank you for visiting our restaurant! ❤️</p>
+</div>
+
+</body>
+</html>
